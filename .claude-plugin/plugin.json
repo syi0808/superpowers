@@ -1,13 +1,13 @@
 {
-  "name": "superpowers",
+  "name": "castlepowers",
   "description": "Core skills library for Claude Code: TDD, debugging, collaboration patterns, and proven techniques",
-  "version": "5.0.5",
+  "version": "0.1.0",
   "author": {
-    "name": "Jesse Vincent",
-    "email": "jesse@fsck.com"
+    "name": "Yein Sung",
+    "email": "syi778800@gmail.com"
   },
-  "homepage": "https://github.com/obra/superpowers",
-  "repository": "https://github.com/obra/superpowers",
+  "homepage": "https://github.com/syi0808/superpowers",
+  "repository": "https://github.com/syi0808/superpowers",
   "license": "MIT",
   "keywords": ["skills", "tdd", "debugging", "collaboration", "best-practices", "workflows"]
 }

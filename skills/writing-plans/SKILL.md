@@ -17,6 +17,7 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 
 **Save plans to:** `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md`
 - (User preferences for plan location override this default)
+- **Do NOT commit plan files.** Plans are working documents, not repository artifacts.
 
 ## Scope Check
 
