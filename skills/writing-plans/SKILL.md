@@ -132,6 +132,25 @@ After writing the complete plan, look at the spec with fresh eyes and check the 
 
 If you find issues, fix them inline. No need to re-review — just fix and move on. If you find a spec requirement with no task, add the task.
 
+## Plan Challenge Review (Optional)
+
+After self-review, optionally run an adversarial review to challenge the design approach. This is recommended for plans involving security, data integrity, multi-service coordination, or significant architectural changes.
+
+```bash
+REPO_ROOT=$(git rev-parse --show-toplevel)
+node "${REPO_ROOT}/plugins/codex-plugin-cc/plugins/codex/scripts/codex-companion.mjs" adversarial-review --wait
+```
+
+Run via Bash tool with `--wait`. The adversarial review questions the chosen approach, design tradeoffs, and assumptions — it is not a code quality check.
+
+**Interpreting results:**
+- **Verdict: approve** — Design approach holds up. Proceed to execution.
+- **Verdict: needs-attention** — Review each finding. For valid concerns, revise the relevant plan sections before proceeding. For findings that don't apply (e.g., reviewer lacked context), note them and move on.
+
+**When to skip:** Trivial plans (1-2 simple tasks), pure refactors with no behavior change.
+
+**Fallback:** If the review process fails, proceed without it — this step is supplementary to the self-review, not a gate.
+
 ## Execution Handoff
 
 After saving the plan, offer execution choice:
