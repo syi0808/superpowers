@@ -28,13 +28,19 @@ Run automated code quality review to catch issues before they cascade. The revie
 BASE_SHA=$(git rev-parse HEAD~1)  # or origin/main for full branch review
 ```
 
-**2. Run automated review:**
+**2. Choose review method:**
+
+Ask the user which review method to use:
+
+**Option A: codex-cc automated review**
 ```bash
 REPO_ROOT=$(git rev-parse --show-toplevel)
 node "${REPO_ROOT}/plugins/codex-plugin-cc/plugins/codex/scripts/codex-companion.mjs" review --wait --base ${BASE_SHA}
 ```
-
 Always use `--wait` — the controller needs the result to decide next steps.
+
+**Option B: Claude subagent review**
+Dispatch the `castlepowers:code-reviewer` subagent using the template at `code-reviewer.md`.
 
 **3. Act on results:**
 
@@ -49,8 +55,6 @@ Always use `--wait` — the controller needs the result to decide next steps.
 - Verdict `needs-attention` + critical/high findings → fix issues, re-run review
 - Verdict `needs-attention` + only medium/low → note findings, proceed
 - Push back if reviewer is wrong (with reasoning)
-
-**If automated review fails** (process error, missing binary, auth issue), dispatch the `superpowers:code-reviewer` subagent instead using the template at `code-reviewer.md`.
 
 ## Example
 

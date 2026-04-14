@@ -15,6 +15,10 @@ Load plan, review critically, execute all tasks, report when complete.
 
 ## The Process
 
+<HARD-GATE>
+Before executing any task, verify you are working in a worktree (not on main/master). If not, invoke `superpowers:using-git-worktrees` to create one first. Never execute implementation tasks on main/master.
+</HARD-GATE>
+
 ### Step 1: Load and Review Plan
 1. Read plan file
 2. Review critically - identify any questions or concerns about the plan

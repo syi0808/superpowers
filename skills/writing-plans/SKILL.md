@@ -50,7 +50,7 @@ This structure informs the task decomposition. Each task should produce self-con
 ```markdown
 # [Feature Name] Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development to implement this plan task-by-task. For plans with 1-2 simple mechanical tasks, superpowers:executing-plans may be used instead. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** [One sentence describing what this builds]
 
@@ -136,6 +136,10 @@ If you find issues, fix them inline. No need to re-review — just fix and move 
 
 After self-review, optionally run an adversarial review to challenge the design approach. This is recommended for plans involving security, data integrity, multi-service coordination, or significant architectural changes.
 
+**Before running:** Ask the user whether they want to use codex-cc for the adversarial review. This step is entirely optional — if the user declines or codex-cc is not available, skip it and proceed to execution.
+
+If the user opts in:
+
 ```bash
 REPO_ROOT=$(git rev-parse --show-toplevel)
 node "${REPO_ROOT}/plugins/codex-plugin-cc/plugins/codex/scripts/codex-companion.mjs" adversarial-review --wait
@@ -149,24 +153,18 @@ Run via Bash tool with `--wait`. The adversarial review questions the chosen app
 
 **When to skip:** Trivial plans (1-2 simple tasks), pure refactors with no behavior change.
 
-**Fallback:** If the review process fails, proceed without it — this step is supplementary to the self-review, not a gate.
-
 ## Execution Handoff
 
-After saving the plan, offer execution choice:
+After saving the plan, automatically determine the execution method based on plan complexity. **Do not ask the user to choose.**
 
-**"Plan complete and saved to `docs/superpowers/plans/<filename>.md`. Two execution options:**
+**"Plan complete and saved to `docs/superpowers/plans/<filename>.md`. Proceeding to execution."**
 
-**1. Subagent-Driven (recommended)** - I dispatch a fresh subagent per task, review between tasks, fast iteration
-
-**2. Inline Execution** - Execute tasks in this session using executing-plans, batch execution with checkpoints
-
-**Which approach?"**
-
-**If Subagent-Driven chosen:**
+**Default: Subagent-Driven Development**
+- For plans with 3+ tasks, or any task involving multi-file changes, integration, or non-trivial logic
 - **REQUIRED SUB-SKILL:** Use superpowers:subagent-driven-development
 - Fresh subagent per task + two-stage review
 
-**If Inline Execution chosen:**
+**Exception: Inline Execution (auto-determined)**
+- Only for plans with 1-2 simple mechanical tasks (single file change, clear spec, no integration concerns)
 - **REQUIRED SUB-SKILL:** Use superpowers:executing-plans
-- Batch execution with checkpoints for review
+- Announce: "This plan is small enough for inline execution." — do not ask, just proceed

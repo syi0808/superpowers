@@ -13,35 +13,22 @@ Execute plan by dispatching fresh subagent per task, with two-stage review after
 
 ## When to Use
 
-```dot
-digraph when_to_use {
-    "Have implementation plan?" [shape=diamond];
-    "Tasks mostly independent?" [shape=diamond];
-    "Stay in this session?" [shape=diamond];
-    "subagent-driven-development" [shape=box];
-    "executing-plans" [shape=box];
-    "Manual execution or brainstorm first" [shape=box];
+This is the **default execution method** for all implementation plans. The writing-plans skill automatically selects this method unless the plan has only 1-2 simple mechanical tasks (in which case executing-plans is used instead).
 
-    "Have implementation plan?" -> "Tasks mostly independent?" [label="yes"];
-    "Have implementation plan?" -> "Manual execution or brainstorm first" [label="no"];
-    "Tasks mostly independent?" -> "Stay in this session?" [label="yes"];
-    "Tasks mostly independent?" -> "Manual execution or brainstorm first" [label="no - tightly coupled"];
-    "Stay in this session?" -> "subagent-driven-development" [label="yes"];
-    "Stay in this session?" -> "executing-plans" [label="no - parallel session"];
-}
-```
-
-**vs. Executing Plans (parallel session):**
-- Same session (no context switch)
-- Fresh subagent per task (no context pollution)
-- Two-stage review after each task: spec compliance first, then automated code quality review
-- Faster iteration (no human-in-loop between tasks)
+If you have an implementation plan, use this skill.
 
 ## The Process
+
+<HARD-GATE>
+Before dispatching any implementer subagent, verify you are working in a worktree (not on main/master). If not, invoke `superpowers:using-git-worktrees` to create one first. Never execute implementation tasks on main/master.
+</HARD-GATE>
 
 ```dot
 digraph process {
     rankdir=TB;
+
+    "Verify worktree (HARD GATE)" [shape=box style=filled fillcolor=lightyellow];
+    "Read plan, extract all tasks with full text, note context, create TodoWrite" [shape=box];
 
     subgraph cluster_per_task {
         label="Per Task";
@@ -58,11 +45,11 @@ digraph process {
         "Mark task complete in TodoWrite" [shape=box];
     }
 
-    "Read plan, extract all tasks with full text, note context, create TodoWrite" [shape=box];
     "More tasks remain?" [shape=diamond];
     "Run final code quality review (--base origin/main)" [shape=box];
     "Use superpowers:finishing-a-development-branch" [shape=box style=filled fillcolor=lightgreen];
 
+    "Verify worktree (HARD GATE)" -> "Read plan, extract all tasks with full text, note context, create TodoWrite";
     "Read plan, extract all tasks with full text, note context, create TodoWrite" -> "Dispatch implementer subagent (./implementer-prompt.md)";
     "Dispatch implementer subagent (./implementer-prompt.md)" -> "Implementer subagent asks questions?";
     "Implementer subagent asks questions?" -> "Answer questions, provide context" [label="yes"];
@@ -210,11 +197,6 @@ Done!
 - Parallel-safe (subagents don't interfere)
 - Subagent can ask questions (before AND during work)
 
-**vs. Executing Plans:**
-- Same session (no handoff)
-- Continuous progress (no waiting)
-- Review checkpoints automatic
-
 **Efficiency gains:**
 - No file reading overhead (controller provides full text)
 - Controller curates exactly what context is needed
@@ -276,5 +258,5 @@ Done!
 **Subagents should use:**
 - **superpowers:test-driven-development** - Subagents follow TDD for each task
 
-**Alternative workflow:**
-- **superpowers:executing-plans** - Use for parallel session instead of same-session execution
+**For small plans only:**
+- **superpowers:executing-plans** - Auto-selected by writing-plans for plans with 1-2 simple mechanical tasks
