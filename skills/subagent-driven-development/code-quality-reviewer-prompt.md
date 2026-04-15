@@ -28,7 +28,7 @@ Always use `--wait` — the controller needs the result to decide next steps.
 
 ### Option B: Claude Subagent Review
 
-Dispatch the `castlepowers:code-reviewer` subagent.
+Dispatch the `superpowers:code-reviewer` subagent.
 
 ```
 Task tool (superpowers:code-reviewer):

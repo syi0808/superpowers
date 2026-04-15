@@ -40,7 +40,7 @@ node "${REPO_ROOT}/plugins/codex-plugin-cc/plugins/codex/scripts/codex-companion
 Always use `--wait` — the controller needs the result to decide next steps.
 
 **Option B: Claude subagent review**
-Dispatch the `castlepowers:code-reviewer` subagent using the template at `code-reviewer.md`.
+Dispatch the `superpowers:code-reviewer` subagent using the template at `code-reviewer.md`.
 
 **3. Act on results:**
 
